@@ -216,7 +216,11 @@ void OpSound(eSound s) { op_sound.Set(s); }
 
 static struct eOptionJoy : public xOptions::eOptionInt
 {
-	eOptionJoy() { Set(J_FIRST); }
+	#if defined RG350 || defined RETROFW
+		eOptionJoy() { Set(J_KEMPSTON); }
+	#else
+		eOptionJoy() { Set(J_FIRST); }
+	#endif
 	virtual const char* Name() const { return "joystick"; }
 	virtual const char** Values() const
 	{
