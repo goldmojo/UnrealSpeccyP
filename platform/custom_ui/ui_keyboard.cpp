@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ui_keyboard.h"
 #include "../../ui/ui_button.h"
 
-#ifdef RG350
+#if defined RG350 || defined RETROFW
 #include "../../speccy.h"
 #endif
 
@@ -56,7 +56,7 @@ void eKeyboard::Init()
 {
 	background = COLOR_BACKGROUND;
 	eRect r_dlg(ePoint(169, 70));
-	#ifdef RG350
+	#if defined RG350 || defined RETROFW
 		if(gcw_fullscreen)
 		{
 			r_dlg.Move(ePoint(143-24, 24));
@@ -67,7 +67,7 @@ void eKeyboard::Init()
 		}
 	#else
 		r_dlg.Move(ePoint(143, 8));
-	#endif //RG350
+	#endif //RG350 - RETROFW
 	Bound() = r_dlg;
 	eRect r_item(ePoint(13, FontSize().y + 2));
 	ePoint margin(6, 6);

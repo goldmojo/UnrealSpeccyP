@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#ifdef RG350
+#if defined RG350 || defined RETROFW
 extern int gcw_fullscreen;
 #endif
 

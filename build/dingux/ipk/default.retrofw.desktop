@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=UnrealSpeccy
+Comment=Portable version of ZX-Spectrum emulator - CustomJoy
+Exec=unreal_speccy_portable.dge %f
+Icon=icon-32x32
+Type=Application
+Terminal=false
+StartupNotify=true
+Categories=emulators;
+X-OD-Filter=.zip,.tap,.tzx,.sna,.z80,.szx,.scl,.trd,.csw
+MimeType=application/usp-zx-snapshot;application/usp-zx-disk;application/usp-zx-tape;

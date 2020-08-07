@@ -39,9 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "file_type.h"
 #include "snapshot/rzx.h"
 
-#ifdef RG350
+#if defined RG350 || defined RETROFW
 int gcw_fullscreen = 1;
-#endif//RG350
+#endif//RG350 - RETROFW
 
 namespace xPlatform
 {
@@ -128,6 +128,15 @@ static struct eSpeccyHandler : public eHandler, public eRZX::eHandler, public xZ
 			speccy->CPU()->HandlerIo(this);
 	}
 
+#if defined RG350 || defined RETROFW
+	char* CustomJoystick(void) { return &kCustom[0]; };
+	void SetCustomJoystick(char* joystick)
+	{
+		for(int i=0;i<5;i++)
+		  kCustom[i] = joystick[i];
+	}
+#endif
+
 	eSpeccy* speccy;
 #ifdef USE_UI
 	xUi::eDesktop* ui_desktop;
@@ -140,6 +149,9 @@ static struct eSpeccyHandler : public eHandler, public eRZX::eHandler, public xZ
 
 	enum { SOUND_DEV_COUNT = 3 };
 	eDeviceSound* sound_dev[SOUND_DEV_COUNT];
+#if defined RG350 || defined RETROFW
+	char kCustom[5] = {'K','L','A',' ','Z'};/*Abadia del crimen*/;
+#endif
 } sh;
 
 void eSpeccyHandler::OnInit()
@@ -289,6 +301,19 @@ void eSpeccyHandler::OnKey(char key, dword flags)
 		case 'f' : key = ' '; break;
 		}
 	}
+#if defined RG350 || defined RETROFW
+	else if(flags&KF_KCUSTOM)
+	{
+		switch(key)
+		{
+		case 'l' : key = kCustom[0]; break;
+		case 'r' : key = kCustom[1]; break;
+		case 'u' : key = kCustom[2]; break;
+		case 'd' : key = kCustom[3]; break;
+		case 'f' : key = kCustom[4]; break;
+		}
+	}
+#endif
 	speccy->Device<eKeyboard>()->OnKey(key, down, shift, ctrl, alt);
 }
 void eSpeccyHandler::OnMouse(eMouseAction action, byte a, byte b)
@@ -366,7 +391,7 @@ static struct eOption48K : public xOptions::eOptionBool
 
 static struct eOptionResetToServiceRom : public xOptions::eOptionBool
 {
-	#ifdef RG350
+	#if defined RG350 || defined RETROFW
 	virtual const char* Name() const { return "reset to s-rom"; }
 	#else
 	virtual const char* Name() const { return "reset to service rom"; }
@@ -374,7 +399,7 @@ static struct eOptionResetToServiceRom : public xOptions::eOptionBool
 	virtual int Order() const { return 79; }
 } op_reset_to_service_rom;
 
-#ifdef RG350
+#if defined RG350 || defined RETROFW
 static struct eOptionFullscreen : public xOptions::eOptionBool
 {
 	virtual const char* Name() const { return "fullscreen"; }

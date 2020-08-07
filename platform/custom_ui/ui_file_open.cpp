@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../options_common.h"
 #include "../../file_type.h"
 #include <ctype.h>
+#if defined RG350  || defined RETROFW
+#include "../../speccy.h"
+#endif
 
 #ifdef USE_UI
 
@@ -45,7 +48,15 @@ eFileOpenDialog::eFileOpenDialog(const char* _path) : list(NULL), selected(NULL)
 void eFileOpenDialog::Init()
 {
 	background = COLOR_BACKGROUND;
+#if defined RG350 || defined RETROFW
+	eRect r(ePoint(112, 172));
+	if(gcw_fullscreen)
+	    r.Move(ePoint(32, 24));
+	else
+	    r.Move(ePoint(8, 8));
+#else
 	eRect r(8, 8, 120, 180);
+#endif
 	ePoint margin(6, 6);
 	Bound() = r;
 	list = new eList;

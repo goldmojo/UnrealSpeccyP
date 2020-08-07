@@ -1,0 +1,10 @@
+Package: unreal_speccy_portable
+Version: 
+Description: RetroFW port of UnrealSpeccyP
+Section: emus
+Priority: optional
+Maintainer: goldmojo
+Architecture: mipsel
+Homepage: https://github.com/goldmojo/UnrealSpeccyP
+Depends:
+Source: https://github.com/goldmojo/UnrealSpeccyP

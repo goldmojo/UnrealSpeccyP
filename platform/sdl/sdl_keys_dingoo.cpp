@@ -37,14 +37,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DINGOO_BUTTON_Y             SDLK_LSHIFT
 #define DINGOO_BUTTON_SELECT        SDLK_ESCAPE
 #define DINGOO_BUTTON_START         SDLK_RETURN
+#ifdef RG350
 #define DINGOO_BUTTON_POWER         SDLK_HOME
+#else
+#define DINGOO_BUTTON_POWER         SDLK_END
+#endif
 
 namespace xPlatform
 {
 
 static bool l_shift = false, r_shift = false, b_select = false, b_start = false;
 
-#ifdef RG350 //map A-stick to movement
+#if defined RG350 || defined RETROFW //map A-stick to movement
 	static byte TranslateJoy(Uint8 _key2, dword& _flags)
 	{
 	        switch(_key2)
@@ -59,7 +63,7 @@ static bool l_shift = false, r_shift = false, b_select = false, b_start = false;
 	        }
 		return 0;
 	}
-#endif //RG350
+#endif //RG350 - RETROFW
 
 static byte TranslateKey(SDLKey _key, dword& _flags)
 {
@@ -92,27 +96,27 @@ static byte TranslateKey(SDLKey _key, dword& _flags)
 		l_shift = _flags&KF_DOWN;
 		if(!ui_focused)
 		{
-		#ifdef RG350 //redefine L as save state
+		#if defined RG350 || defined RETROFW //redefine L as save state
 	        using namespace xOptions;
 	        eOptionB* o = eOptionB::Find("save state");
 	        SAFE_CALL(o)->Change();
 		#else
 			Handler()->OnAction(A_RESET);
-		#endif//RG350
+		#endif//RG350 - RETROFW
         }
 		break;
 	case DINGOO_BUTTON_R:
 		r_shift = _flags&KF_DOWN;
 		if(!ui_focused)
 		{
-		#ifdef RG350 //redefine R as load state
+                #if defined RG350 || defined RETROFW //redefine R as load state
 			using namespace xOptions;
 			eOptionB* o = eOptionB::Find("load state");
 			SAFE_CALL(o)->Change();
 		#else
 			xOptions::eOption<int>* op_sound = xOptions::eOption<int>::Find("sound");
 			SAFE_CALL(op_sound)->Change();
-		#endif//RG350
+		#endif//RG350 - RETROFW
 		}
 		break;
 
@@ -155,7 +159,7 @@ void ProcessKey(SDL_Event& e)
 	}
 }
 
-#ifdef RG350//A-stick code, mostly ripped from the wiki ;)
+#if defined RG350 || defined RETROFW //A-stick code, mostly ripped from the wiki ;)
 	void ProcessJoy(SDL_Event& e)
 	{
 		int JOY_DEADZONE=1000;
@@ -250,7 +254,7 @@ void ProcessKey(SDL_Event& e)
 			}
 		}
 	}
-#endif//RG350
+#endif//RG350 - RETROFW
 }
 //namespace xPlatform
 

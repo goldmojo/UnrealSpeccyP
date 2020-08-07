@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../platform.h"
 
-#ifdef RG350
+#if defined RG350 || defined RETROFW
 #include "../../speccy.h"
 #endif
 
@@ -30,7 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SCREEN_WIDTH  320
 #define SCREEN_HEIGHT 240
+#if defined RG350 || defined RETROFW
+#define BPP            16
+#else
 #define BPP            32
+#endif
 #define BORDER_WIDTH   32
 #define BORDER_HEIGHT  24
 
@@ -69,7 +73,11 @@ bool InitVideo()
 	if(!screen)
 		return false;
 #else//SDL_NO_OFFSCREEN
+#if defined RG350 || defined RETROFW
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_HWSURFACE|SDL_TRIPLEBUF);
+#else
 	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_HWSURFACE|SDL_DOUBLEBUF);
+#endif
 	if(!screen)
 		return false;
 	offscreen = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, BPP,
@@ -93,18 +101,18 @@ void DoneVideo()
 
 void UpdateScreen()
 {
-#ifdef RG350
+#if defined RG350 || defined RETROFW
 	static int gcw_fullscreen_current = 0;
 	if (gcw_fullscreen_current != gcw_fullscreen)
 	{
 		gcw_fullscreen_current = gcw_fullscreen;
 		if(gcw_fullscreen)
 		{
-			screen = SDL_SetVideoMode(SCREEN_WIDTH - 2 * BORDER_WIDTH, SCREEN_HEIGHT - 2 * BORDER_HEIGHT, BPP, SDL_HWSURFACE|SDL_DOUBLEBUF);
+			screen = SDL_SetVideoMode(SCREEN_WIDTH - 2 * BORDER_WIDTH, SCREEN_HEIGHT - 2 * BORDER_HEIGHT, BPP, SDL_HWSURFACE|SDL_TRIPLEBUF);
 		}
 		else
 		{
-			screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_HWSURFACE|SDL_DOUBLEBUF);
+			screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, BPP, SDL_HWSURFACE|SDL_TRIPLEBUF);
 		}
 	}
 #endif
@@ -117,7 +125,11 @@ void UpdateScreen()
 	if(SDL_MUSTLOCK(out))
 		SDL_LockSurface(out);
 	byte* data = (byte*)Handler()->VideoData();
+#if defined RG350 || defined RETROFW
+	word* scr = (word*)out->pixels;
+#else
 	dword* scr = (dword*)out->pixels;
+#endif
 #ifdef USE_UI
 	byte* data_ui = (byte*)Handler()->VideoDataUI();
 	if(data_ui)
@@ -151,7 +163,7 @@ void UpdateScreen()
 	if(SDL_MUSTLOCK(out))
 		SDL_UnlockSurface(out);
 
-	#ifdef RG350
+	#if defined RG350 || defined RETROFW
 		if (gcw_fullscreen)
 		{
 			SDL_Rect dst;
@@ -169,7 +181,7 @@ void UpdateScreen()
 		#ifndef SDL_NO_OFFSCREEN
 			SDL_BlitSurface(offscreen, NULL, screen, NULL);
 		#endif//SDL_NO_OFFSCREEN
-	#endif //RG350
+	#endif //RG350 - RETROFW
 	SDL_Flip(screen);
 }
 

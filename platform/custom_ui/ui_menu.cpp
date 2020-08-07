@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../ui/ui_button.h"
 #include "../../tools/options.h"
 
-#ifdef RG350
+#if defined RG350 || defined RETROFW
 #include "../../speccy.h"
 #endif
 
@@ -99,9 +99,12 @@ void eMenu::Init()
 {
 	background = COLOR_BACKGROUND;
 	ePoint margin(6, 6);
-	#ifdef RG350
+	#if defined RG350 || defined RETROFW
 		eRect r_dlg(ePoint(130, 2*margin.y));
-		r_dlg.Move(ePoint(32, 24));
+		if(gcw_fullscreen)
+		    r_dlg.Move(ePoint(32, 24));
+		else
+		    r_dlg.Move(ePoint(8, 8));
 	#else
 		eRect r_dlg(ePoint(160, 2*margin.y));
 		r_dlg.Move(ePoint(8, 8));
